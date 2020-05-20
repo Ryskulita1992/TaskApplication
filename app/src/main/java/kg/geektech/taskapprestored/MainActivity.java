@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,6 +25,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import kg.geektech.taskapprestored.login.PhoneActivity;
 import kg.geektech.taskapprestored.ui.onboard.OnBoardActivity;
 import kg.geektech.taskapprestored.ui.home.HomeFragment;
 
@@ -31,8 +33,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private HomeFragment homeFragment;
-    NavigationView navigationView;
-    ImageView headerImageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
+        if (FirebaseAuth.getInstance().getCurrentUser()==null){// if not authenticated will open phone activity to do that
+       startActivity(new Intent(this, PhoneActivity.class));
+       finish();
+       return;
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
     private  boolean isShown (){
         SharedPreferences preferences =getSharedPreferences("storageFile", Context.MODE_PRIVATE);
         return preferences.getBoolean("isShown",true);
-    };
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

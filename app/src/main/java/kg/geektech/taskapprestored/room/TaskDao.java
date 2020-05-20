@@ -2,6 +2,7 @@ package kg.geektech.taskapprestored.room;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
@@ -16,20 +17,23 @@ public interface TaskDao {
     @Query("SELECT * FROM task")
     List<Task> getAll();
 
-    @Query("SELECT * FROM task")
+    @Query("SELECT * FROM task ")
     LiveData<List<Task>> getAllLive();
 
     @Insert
     void insert(Task task);
 
-    @Query("UPDATE task Set title = :newTitle, `desc` = :newDesc WHERE id IN (:idList)")
-    void update(int idList ,String newTitle, String newDesc);
+    @Update
+    void update(Task task);
 
+    @Delete
+    void delete(Task task);
 
-    @Query("DELETE from task WHERE id IN (:idList)")
-    void deleteByIdList(int idList);
+//    @Query("SELECT * FROM task ORDER BY title ASC ")
+//    LiveData<Task> getAllSortedLive();
 //
-//    @Query("UPDATE task Set title = :newTitle, `desc` = :newDesc WHERE id IN (:idList)")
-//    void updateSalaryByIdList(int idList ,String newTitle, String newDesc);
+//    @Query("SELECT * FROM task  ORDER BY title DESC ")
+//    LiveData<Task> sortDesc();
+
 
 }
