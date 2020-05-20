@@ -32,6 +32,7 @@ public class PhoneActivity extends AppCompatActivity {
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
     CountryCodePicker countryCodePicker;
     private boolean isCodeSent ;
+    PhoneAuthCredential phoneAuthCredential;
     private String verification;
 
 
@@ -108,9 +109,10 @@ public class PhoneActivity extends AppCompatActivity {
 
 
     public void submit(View view) {
-
-
+        phoneAuthCredential.getSmsCode();
+        //signIn(phoneAuthCredential);
         String phone= editText.getText().toString().trim();
+
         if(phone.isEmpty()){
             editText.setError("Phone number is required");
             editText.requestFocus();
@@ -119,8 +121,7 @@ public class PhoneActivity extends AppCompatActivity {
             editText.setError("Please enter a valid phone");
             editText.requestFocus();
             return;
-        }else if (isCodeSent){
-
+        }else if (isCodeSent=true){
                     editText.setVisibility(View.GONE);
                     submit.setVisibility(View.GONE);
                     countryCodePicker.setVisibility(View.GONE);
@@ -141,7 +142,7 @@ public class PhoneActivity extends AppCompatActivity {
             edit_otp.requestFocus();
 
         }
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(String.valueOf(isCodeSent), code);
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification, code);
         signIn(credential);
 
     }
