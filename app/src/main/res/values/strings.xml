@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">taskApp</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Рыскуль</string>
+    <string name="nav_header_email">ryskulita@gmail.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="action_exit">Exit</string>
+    <string name="action_log_out">Log out</string>
+
+    <string name="menu_home">Задачи</string>
+    <string name="menu_gallery">Галлерея</string>
+    <string name="menu_slideshow">Прочее</string>
+    <string name="home_second">Home Second</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

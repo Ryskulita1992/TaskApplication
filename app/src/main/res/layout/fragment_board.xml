@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:background="@color/colorBlack"
+    android:orientation="vertical"
+    tools:context=".ui.onboard.BoardFragment">
+
+    <ImageView
+        android:id="@+id/image_view"
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"/>
+    <TextView
+        android:textColor="@color/colorWhite"
+        android:id="@+id/view_pager_text_title"
+        android:textStyle="bold"
+        android:textSize="30sp"
+        android:layout_marginTop="140dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment" />
+    <TextView
+        android:textAlignment="center"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        android:id="@+id/text_title_bottom"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/getStarted"
+        android:layout_marginTop="35dp"
+        android:text="GET STARTED"
+        android:textColor="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorRed"
+        />
+
+
+
+
+</LinearLayout>

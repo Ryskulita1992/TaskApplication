@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="20dp"
+    android:layout_height="match_parent">
+    <EditText
+        android:id="@+id/edit_title"
+        android:hint=" Введите название задачи"
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/edit_description"
+        android:hint="Введите детали задачи"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/save"
+        android:onClick="save"
+        android:layout_marginTop="25dp"
+        android:layout_height="wrap_content"
+        android:text="SAVE"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:textColor="@android:color/background_light"
+        android:background="#580FFD"
+        android:layout_width="match_parent" />
+    <Button
+        android:onClick="editAndSave"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/change"
+        android:visibility="invisible"
+        android:background="#580FFD"
+        android:textColor="@android:color/background_light"
+        android:text="CHANGE"
+        />
+</LinearLayout>
+
+
+
+
+
+
+
