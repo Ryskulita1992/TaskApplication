@@ -47,9 +47,8 @@ public class PhoneActivity extends AppCompatActivity {
         setContentView(R.layout.activity_phone);
         editText = findViewById(R.id.edit_auth);
         edit_otp = findViewById(R.id.edit_otp);
-        edit_otp.setVisibility(View.GONE);
+        //edit_otp.setVisibility(View.INVISIBLE);
         submit_otp = findViewById(R.id.submit_otp);
-        submit_otp.setVisibility(View.GONE);
         submit = findViewById(R.id.submit);
         countryCodePicker = findViewById(R.id.ccp);
         callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -66,7 +65,6 @@ public class PhoneActivity extends AppCompatActivity {
                 Log.e("ololo", "OnVerification");
 
             }
-
 
 
             @Override
@@ -87,10 +85,10 @@ public class PhoneActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-//
-//
-//                    startActivity(new Intent(PhoneActivity.this, MainActivity.class));
-//                    finish();
+
+
+                    startActivity(new Intent(PhoneActivity.this, MainActivity.class));
+                    finish();
                 } else {
                     Toast.makeText(PhoneActivity.this, "Sign in was failed" , Toast.LENGTH_SHORT).show();
                     Log.e("ololo", "Incorrect Verification Code , Toast.LENGTH_LONG).show();"+ task.getException().getMessage());
@@ -109,6 +107,11 @@ public class PhoneActivity extends AppCompatActivity {
         //signIn(phoneAuthCredential);
         String phone= editText.getText().toString().trim();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(phone, 60, TimeUnit.SECONDS, this, callbacks);
+        submit.setVisibility(View.INVISIBLE);
+        countryCodePicker.setVisibility(View.GONE);
+        editText.setVisibility(View.GONE);
+        //edit_otp.setVisibility(View.VISIBLE);
+        submit_otp.setVisibility(View.VISIBLE);
 
         if(phone.isEmpty()){
             editText.setError("Phone number is required");
@@ -118,27 +121,22 @@ public class PhoneActivity extends AppCompatActivity {
             editText.setError("Please enter a valid phone");
             editText.requestFocus();
             return;
-        }else{
-                    editText.setVisibility(View.GONE);
-                    submit.setVisibility(View.GONE);
-                    countryCodePicker.setVisibility(View.GONE);
-                    edit_otp.setVisibility(View.VISIBLE);
-                    submit_otp.setVisibility(View.VISIBLE);
-
+        }else {
+            Toast.makeText(this, "Code was sent, don`t share with anyone!", Toast.LENGTH_SHORT).show();
         }
-
-        Toast.makeText(this, "Code was sent, don`t share with anyone!", Toast.LENGTH_SHORT).show();
-
     }
 
     public void submit_otp(String otp) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification, otp);
+        signIn(credential);
+        editText.setVisibility(View.GONE);
+        submit.setVisibility(View.GONE);
+        submit_otp.setVisibility(View.VISIBLE);
         otp = edit_otp.getText().toString();
         if (otp.isEmpty()){
             edit_otp.setError("You should enter the  SMS code  ");
             edit_otp.requestFocus();
         }
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification, otp);
-        signIn(credential);
 
     }
 }
