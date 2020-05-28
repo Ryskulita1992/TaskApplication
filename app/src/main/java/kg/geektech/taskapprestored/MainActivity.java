@@ -43,11 +43,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        if (FirebaseAuth.getInstance().getCurrentUser()==null){// if not authenticated will open phone activity to do that
-       startActivity(new Intent(this, PhoneActivity.class));
-       finish();
-       return;
-        }
+//        if (FirebaseAuth.getInstance().getCurrentUser()==null){// if not authenticated will open phone activity to do that
+//       startActivity(new Intent(this, PhoneActivity.class));
+//       finish();
+//       return;
+//        }
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);

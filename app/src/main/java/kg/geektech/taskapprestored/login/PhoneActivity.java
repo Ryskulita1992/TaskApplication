@@ -4,11 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.NotProvisionedException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -16,10 +18,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthSettings;
+import com.google.firebase.auth.OAuthCredential;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.hbb20.CountryCodePicker;
 
 import java.util.concurrent.TimeUnit;
 
@@ -27,116 +28,102 @@ import kg.geektech.taskapprestored.MainActivity;
 import kg.geektech.taskapprestored.R;
 
 public class PhoneActivity extends AppCompatActivity {
-    private EditText editText, edit_otp;
-    private Button submit, submit_otp;
+    EditText editPhoneNum, editCodeNum;
+    TextView textCountryCode;
+    private String verificationID;
+    Button submit, submitCode;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
-    private CountryCodePicker countryCodePicker;
-    private String verification, otp;
-
-
-//    String phoneNum = "+16505554567";
-//    String testVerificationCode = "123456";
-//    FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-//    FirebaseAuthSettings firebaseAuthSettings = firebaseAuth.getFirebaseAuthSettings();
-//    firebaseAuthSettings.
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone);
-        editText = findViewById(R.id.edit_auth);
-        edit_otp = findViewById(R.id.edit_otp);
-        //edit_otp.setVisibility(View.INVISIBLE);
-        submit_otp = findViewById(R.id.submit_otp);
-        submit = findViewById(R.id.submit);
-        countryCodePicker = findViewById(R.id.ccp);
-        callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+       // setContentView(R.layout.phone_second_activity);
+        editPhoneNum=findViewById(R.id.phoneNum);
+        textCountryCode=findViewById(R.id.country_code);
+        submit=findViewById(R.id.submit);
+        submitCode=findViewById(R.id.submit_code);
+        editCodeNum=findViewById(R.id.edit_code_num);
+        //final boolean isReceived;
+        callbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-               otp= phoneAuthCredential.getSmsCode();
-                if (otp!=null) {
-                    verifyCode(otp);
 
-                } else {
-                    signIn(phoneAuthCredential);
+                   String code=phoneAuthCredential.getSmsCode();
+                   if (code!=null){
+                    verifyCode(code);
+                    return;
+
                 }
+                signIn(phoneAuthCredential);
+                Log.e("ololo", "Verification completed ");
 
-                Log.e("ololo", "OnVerification");
 
             }
-
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-                Log.e("ololo", "OnVerification failed" + e.getMessage());
+                Toast.makeText(getParent(), "Verification is failed",
+                        Toast.LENGTH_LONG).show();
+                Log.e("ololo", ""+ e.getMessage());
+
             }
 
             @Override
-            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.
+                    ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                verification = s;
-                    Log.e("ololo","OnCode sent");
+                Log.e("ololo", "sending code if user enter the " +
+                        "app after long time, On code will not apply the method if " +
+                        "user entered the app few minutes ago");
+                verificationID=s;
+                editCodeNum.setVisibility(View.VISIBLE);
+                submitCode.setVisibility(View.VISIBLE);
+
             }
         };
     }
+    private void verifyCode(String code) {
+        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
+        signIn(credential);
+    }
+
     private void signIn(PhoneAuthCredential phoneAuthCredential) {
-        FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+            FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()){
-
-
-                    startActivity(new Intent(PhoneActivity.this, MainActivity.class));
-                    finish();
-                } else {
-                    Toast.makeText(PhoneActivity.this, "Sign in was failed" , Toast.LENGTH_SHORT).show();
-                    Log.e("ololo", "Incorrect Verification Code , Toast.LENGTH_LONG).show();"+ task.getException().getMessage());
-                }
-            }
+            Log.e("ololo", "signInWithCredential works after onVerification ");
+            if (task.isSuccessful()){
+               // startActivity(new Intent(PhoneActivity.this, MainActivity.class));
+            }else{
+                Toast.makeText(getParent(), "Sign in was failed", Toast.LENGTH_SHORT).show();
+            } }
         });
-    }
-    private void verifyCode(String otp) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification, otp);
-        signIn(credential);
+
     }
 
+    public void countryCode(View view) {
+
+    }
 
     public void submit(View view) {
-        //phoneAuthCredential.getSmsCode();
-        //signIn(phoneAuthCredential);
-        String phone= editText.getText().toString().trim();
+        String phone=textCountryCode.getText().toString().trim()+ editPhoneNum.getText().toString().trim();
         PhoneAuthProvider.getInstance().verifyPhoneNumber(phone, 60, TimeUnit.SECONDS, this, callbacks);
-        submit.setVisibility(View.INVISIBLE);
-        countryCodePicker.setVisibility(View.GONE);
-        editText.setVisibility(View.GONE);
-        //edit_otp.setVisibility(View.VISIBLE);
-        submit_otp.setVisibility(View.VISIBLE);
-
-        if(phone.isEmpty()){
-            editText.setError("Phone number is required");
-            editText.requestFocus();
-            return;
-        }else if(phone.length() < 9 ){
-            editText.setError("Please enter a valid phone");
-            editText.requestFocus();
-            return;
-        }else {
-            Toast.makeText(this, "Code was sent, don`t share with anyone!", Toast.LENGTH_SHORT).show();
-        }
+        editPhoneNum.setVisibility(View.GONE);
+        submitCode.setVisibility(View.GONE);
+        textCountryCode.setVisibility(View.GONE);
     }
 
-    public void submit_otp(String otp) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verification, otp);
-        signIn(credential);
-        editText.setVisibility(View.GONE);
-        submit.setVisibility(View.GONE);
-        submit_otp.setVisibility(View.VISIBLE);
-        otp = edit_otp.getText().toString();
-        if (otp.isEmpty()){
-            edit_otp.setError("You should enter the  SMS code  ");
-            edit_otp.requestFocus();
+    public void submitCode(View view) {
+       String code=editCodeNum.getText().toString().trim();
+        if (code.isEmpty()){
+         return;
         }
-
+        verifyCode(code);
+        finish();
     }
+
+
+
+
 }

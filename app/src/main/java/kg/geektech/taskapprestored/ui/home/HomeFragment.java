@@ -76,10 +76,10 @@ public class HomeFragment extends Fragment {
 
     }
 
-    private void showAlerts(final Task task){
+    private void showAlerts(final Task task) {
         AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
         builder.setMessage("Are you sure to delete ?")
-                .setNegativeButton("cancel",null)
+                .setNegativeButton("cancel", null)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -93,19 +93,19 @@ public class HomeFragment extends Fragment {
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
 
-        }
+    }
 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId()==R.id.action_sort) {
+        if (item.getItemId() == R.id.action_sort) {
             if (sorted) {
                 loadData();
                 sorted = false;
             } else {
-              //  loadDataSorted();
+                loadDataSorted();
                 sorted = true;
-                // sorted=!sorted;
+                sorted = !sorted;
             }
         }
         return super.onOptionsItemSelected(item);
@@ -122,15 +122,15 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-//    private void loadDataSorted() {
-//        App.getInstance().getDatabase().taskDao().getAllLive().observe(this, new Observer<List<Task>>() {
-//            @Override
-//            public void onChanged(List<Task> tasks) {
-//                list.clear();
-//                list.addAll(tasks);
-//                adapter.notifyDataSetChanged();
-//            }
-//        });
-//    }
 
+    private void loadDataSorted() {
+        App.getInstance().getDatabase().taskDao().getAllSortedLive().observe(this, new Observer<List<Task>>() {
+            @Override
+            public void onChanged(List<Task> tasks) {
+                list.clear();
+                list.addAll(tasks);
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
 }

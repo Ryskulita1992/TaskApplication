@@ -3,13 +3,14 @@ package kg.geektech.taskapprestored;
 
 import android.app.Application;
 
+import androidx.multidex.MultiDexApplication;
 import androidx.room.Room;
 
 import kg.geektech.taskapprestored.room.AppDatabase;
 
 import static androidx.room.Room.databaseBuilder;
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private AppDatabase database;
     public static App instance;

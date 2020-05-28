@@ -18,6 +18,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import kg.geektech.taskapprestored.MainActivity;
 import kg.geektech.taskapprestored.R;
 public class BoardFragment extends Fragment {
@@ -39,23 +41,26 @@ public class BoardFragment extends Fragment {
         TextView textTitleBottom = view.findViewById(R.id.text_title_bottom);
         ImageView imageView = view.findViewById(R.id.image_view);
         Button buttonGetStarted = view.findViewById(R.id.getStarted);
-        Button buttonSkip = view.findViewById(R.id.skip_button);
+        final LottieAnimationView animationView = view.findViewById(R.id.animation);
+
         int pos = getArguments().getInt("pos");
         switch (pos) {
             case 0:
-                imageView.setImageResource(R.drawable.netflix);
+                animationView.setAnimation(R.raw.greeting);
+                //imageView.setImageResource(R.drawable.netflix);
                 textTitle.setText("Trying to join Netflix?");
                 textTitleBottom.setText("You can not sign up for Netflix in the app. We know its hassle. After you`re a member, you can start watching in the app");
                 buttonGetStarted.setVisibility(View.INVISIBLE);
                 break;
             case 1:
-
+                animationView.setAnimation(R.raw.balance);
                 imageView.setImageResource(R.drawable.devices);
                 textTitle.setText("Watch on any device");
                 textTitleBottom.setText("Stream on your phone, tablet, laptop, and TV without paying more.");
                 buttonGetStarted.setVisibility(View.INVISIBLE);
                 break;
             case 2:
+                animationView.setAnimation(R.raw.stayhome);
                 imageView.setImageResource(R.drawable.downloadandgo);
                 textTitle.setText("Download and go");
                 textTitleBottom.setText("Save your data, watch offline on a plane, train, or submarine...");
@@ -74,7 +79,6 @@ public class BoardFragment extends Fragment {
         });
 
     }
-
     private void saveIsShown() {
         SharedPreferences preferences = getActivity().getSharedPreferences("storageFile", Context.MODE_PRIVATE);
         preferences.edit().putBoolean("isShown", true).apply();

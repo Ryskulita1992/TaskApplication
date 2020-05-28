@@ -8,11 +8,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 import kg.geektech.taskapprestored.App;
 import kg.geektech.taskapprestored.R;
@@ -63,7 +71,24 @@ public class FormActivity extends AppCompatActivity  {
             Log.e("ololo", "adding new task and updating");
 
         }
-       finish();
+
+        String title2 = editTitle.getText().toString().trim();
+        String desc2 = editDesc.getText().toString().trim();
+        Map<String, Object> map = new HashMap<>();   //PV…
+        map.put("title", title2);
+        map.put("desc", desc2);
+        FirebaseFirestore.getInstance().collection("tasks")
+                .add(map)
+                .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                    @Override
+                    public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(FormActivity.this, "Успешно", Toast.LENGTH_SHORT);
+                        } else {
+                            Toast.makeText(FormActivity.this, "Ошибка", Toast.LENGTH_SHORT);
+                        }
+                    }
+                });
     }
 
 
