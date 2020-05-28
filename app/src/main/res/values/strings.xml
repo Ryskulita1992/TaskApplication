@@ -11,7 +11,8 @@
 
     <string name="menu_home">Задачи</string>
     <string name="menu_gallery">Галлерея</string>
-    <string name="menu_slideshow">FireStore</string>
+    <string name="menu_slideshow">other</string>
+    <string name="menu_fireStore">FireStore</string>
     <string name="home_second">Home Second</string>
 
     <!-- TODO: Remove or change this placeholder text -->

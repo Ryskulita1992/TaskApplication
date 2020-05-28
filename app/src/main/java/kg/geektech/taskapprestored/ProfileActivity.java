@@ -12,6 +12,7 @@ import android.provider.MediaStore;
 import android.service.autofill.AutofillService;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -31,12 +32,16 @@ import kg.geektech.taskapprestored.models.User;
 
 public class ProfileActivity extends AppCompatActivity {
     private EditText editProfile;
+    private ImageView profile_image;
+    Bitmap bitmap;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
         editProfile=findViewById(R.id.edit_profile);
+        profile_image=findViewById(R.id.image_profile);
+        getData2();
     }
 
     public void save(View view) {
@@ -92,7 +97,7 @@ public class ProfileActivity extends AppCompatActivity {
     public void getData2(){
         String uid=FirebaseAuth.getInstance().getUid();
         FirebaseFirestore.getInstance().collection("users")
-                .document(uid)
+                .document("Ryskul")
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
                     @Override
                     public void onEvent(@Nullable DocumentSnapshot documentSnapshot, @Nullable FirebaseFirestoreException e) {
@@ -113,19 +118,22 @@ public class ProfileActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"),1);
     }
+
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1) {
             if (resultCode == Activity.RESULT_OK) {
                 if (data != null) {
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getParent().getContentResolver(), data.getData());
+                        bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), data.getData());
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                profile_image.setImageBitmap(bitmap);
             } else if (resultCode == Activity.RESULT_CANCELED)  {
-                Toast.makeText(getParent(), "Canceled", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show();
             }
         }
     }

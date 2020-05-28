@@ -36,8 +36,13 @@
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
-        android:id="@+id/nav_fireStore"
-        android:name="kg.geektech.taskapprestored.ui.fireStore.FireStoreFragment"
+        android:id="@+id/nav_slideshow"
+        android:name="kg.geektech.taskapprestored.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+    <fragment
+        android:id="@+id/nav_fireStore"
+        android:name="kg.geektech.taskapprestored.ui.fireStore.FirestoreFragment"
+        android:label="@string/menu_fireStore"
+        tools:layout="@layout/fragment_firestore" />
 </navigation>

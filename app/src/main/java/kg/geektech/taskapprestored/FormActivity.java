@@ -72,24 +72,24 @@ public class FormActivity extends AppCompatActivity  {
 
         }
 
-        String title2 = editTitle.getText().toString().trim();
-        String desc2 = editDesc.getText().toString().trim();
-        Map<String, Object> map = new HashMap<>();   //PV…
-        map.put("title", title2);
-        map.put("desc", desc2);
+//        String title2 = editTitle.getText().toString().trim();
+//        String desc2 = editDesc.getText().toString().trim();
+//        Map<String, Object> map = new HashMap<>();   //PV…
+//        map.put("title", title2);
+//        map.put("desc", desc2);
+
         FirebaseFirestore.getInstance().collection("tasks")
-                .add(map)
+                .add(task)
                 .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull com.google.android.gms.tasks.Task<DocumentReference> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(FormActivity.this, "Успешно", Toast.LENGTH_SHORT);
+                            Toast.makeText(FormActivity.this, "Successful", Toast.LENGTH_SHORT);
                         } else {
-                            Toast.makeText(FormActivity.this, "Ошибка", Toast.LENGTH_SHORT);
+                            Toast.makeText(FormActivity.this, "Failed", Toast.LENGTH_SHORT);
                         }
                     }
                 });
+        finish();
     }
-
-
 }

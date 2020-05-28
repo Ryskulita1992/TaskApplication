@@ -22,6 +22,8 @@
             android:layout_gravity="center">
 
             <ImageView
+                android:id="@+id/image_profile"
+                android:onClick="choosePhoto"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:src="@drawable/ic_account"
