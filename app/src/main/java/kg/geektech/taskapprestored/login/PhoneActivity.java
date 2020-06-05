@@ -4,7 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.media.NotProvisionedException;
+import android.media.session.MediaSession;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,117 +13,117 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.OAuthCredential;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.auth.Token;
 
 import java.util.concurrent.TimeUnit;
 
 import kg.geektech.taskapprestored.MainActivity;
 import kg.geektech.taskapprestored.R;
+import kg.geektech.taskapprestored.ui.onboard.BoardFragment;
 
 public class PhoneActivity extends AppCompatActivity {
-    EditText editPhoneNum, editCodeNum;
-    TextView textCountryCode;
+
     private String verificationID;
-    Button submit, submitCode;
+
+    private EditText editPhone, editCode;
+    private Button submit, submitCode;
     private PhoneAuthProvider.OnVerificationStateChangedCallbacks callbacks;
+    private TextView countryCode;
+    private LottieAnimationView anim;
+    private FirebaseAuth mAuth;
+    PhoneAuthProvider.ForceResendingToken mResendToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_phone);
-       // setContentView(R.layout.phone_second_activity);
-        editPhoneNum=findViewById(R.id.phoneNum);
-        textCountryCode=findViewById(R.id.country_code);
-        submit=findViewById(R.id.submit);
-        submitCode=findViewById(R.id.submit_code);
-        editCodeNum=findViewById(R.id.edit_code_num);
-        //final boolean isReceived;
-        callbacks=new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+        mAuth = FirebaseAuth.getInstance();
+        countryCode = findViewById(R.id.country_code);
+        anim = findViewById(R.id.anim);
+        editPhone = findViewById(R.id.phoneNum);
+        submit = findViewById(R.id.submit);
+        editCode = findViewById(R.id.edit_code_num);
+        submitCode = findViewById(R.id.submit_code);
+        callbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
             @Override
             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-
-                   String code=phoneAuthCredential.getSmsCode();
-                   if (code!=null){
+                Log.e("ololo", "onVerificationCompleted");
+                String code = phoneAuthCredential.getSmsCode();
+                if (code != null) {
                     verifyCode(code);
-                    return;
-
                 }
-                signIn(phoneAuthCredential);
-                Log.e("ololo", "Verification completed ");
-
-
             }
 
             @Override
             public void onVerificationFailed(@NonNull FirebaseException e) {
-                Toast.makeText(getParent(), "Verification is failed",
-                        Toast.LENGTH_LONG).show();
-                Log.e("ololo", ""+ e.getMessage());
-
+                Log.e("ololo", "" + e.getMessage());
             }
 
             @Override
-            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.
-                    ForceResendingToken forceResendingToken) {
+            public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                 super.onCodeSent(s, forceResendingToken);
-                Log.e("ololo", "sending code if user enter the " +
-                        "app after long time, On code will not apply the method if " +
-                        "user entered the app few minutes ago");
-                verificationID=s;
-                editCodeNum.setVisibility(View.VISIBLE);
-                submitCode.setVisibility(View.VISIBLE);
-
+                Log.e("ololo", "onCodeSent");
+                verificationID = s;
+                mResendToken = forceResendingToken;
             }
         };
     }
+
     private void verifyCode(String code) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationID, code);
+        Log.e("ololo", ""+ verificationID.toString());
         signIn(credential);
     }
 
     private void signIn(PhoneAuthCredential phoneAuthCredential) {
-            FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-            Log.e("ololo", "signInWithCredential works after onVerification ");
-            if (task.isSuccessful()){
-               // startActivity(new Intent(PhoneActivity.this, MainActivity.class));
-            }else{
-                Toast.makeText(getParent(), "Sign in was failed", Toast.LENGTH_SHORT).show();
-            } }
-        });
+        FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
 
-    }
-
-    public void countryCode(View view) {
+                        } else {
+                            Log.e("ololo", "" + task.getException().getMessage());
+                            Toast.makeText(PhoneActivity.this, "", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
     public void submit(View view) {
-        String phone=textCountryCode.getText().toString().trim()+ editPhoneNum.getText().toString().trim();
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(phone, 60, TimeUnit.SECONDS, this, callbacks);
-        editPhoneNum.setVisibility(View.GONE);
-        submitCode.setVisibility(View.GONE);
-        textCountryCode.setVisibility(View.GONE);
+        String phone = countryCode.getText().toString().trim() + editPhone.getText().toString().trim();
+        PhoneAuthProvider.getInstance().verifyPhoneNumber
+                (phone, 60, TimeUnit.SECONDS, this, callbacks);
+        Log.e("ololo", "PhoneNumber = " + phone);
+        editPhone.setVisibility(View.GONE);
+        submit.setVisibility(View.GONE);
+        countryCode.setVisibility(View.GONE);
+        editCode.setVisibility(View.VISIBLE);
+        submitCode.setVisibility(View.VISIBLE);
     }
 
     public void submitCode(View view) {
-       String code=editCodeNum.getText().toString().trim();
-        if (code.isEmpty()){
-         return;
+        String code = editCode.getText().toString().trim();
+        if (code.isEmpty()|| code.length()<6){
+            Toast.makeText(this, "failed", Toast.LENGTH_SHORT).show();
+            editCode.requestFocus();
+            return;
         }
-        verifyCode(code);
-        finish();
+            verifyCode(code);
+            startActivity(new Intent(PhoneActivity.this, MainActivity.class));
+         finish();
+        }
     }
 
-
-
-
-}

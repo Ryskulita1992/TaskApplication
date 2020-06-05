@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,7 +44,7 @@ public class HomeFragment extends Fragment {
 
     private TaskAdapter adapter;
     private ArrayList<Task> list = new ArrayList<>();
-    private boolean sorted = false;
+    LinearLayoutManager layoutManager;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -55,7 +56,7 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        list.addAll(App.getInstance().getDatabase().taskDao().getAll());
+        //list.addAll(App.getInstance().getDatabase().taskDao().getAllLive());
         adapter = new TaskAdapter(list);
         recyclerView.setAdapter(adapter);
         loadData();
@@ -96,41 +97,47 @@ public class HomeFragment extends Fragment {
     }
 
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.action_sort) {
-            if (sorted) {
-                loadData();
-                sorted = false;
-            } else {
-                loadDataSorted();
-                sorted = true;
-                sorted = !sorted;
-            }
-        }
-        return super.onOptionsItemSelected(item);
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//        if (item.getItemId() == R.id.action_sort) {
+//            if (sorted) {
+//                loadData();
+//                sorted = false;
+//            } else {
+//                loadDataSorted();
+//                sorted = true;
+//                sorted = !sorted;
+//            }
+//        }
+//        return super.onOptionsItemSelected(item);
+//
+//    }
+//    private boolean flag = true;
 
-    }
 
-    private void loadData() {
-        App.getInstance().getDatabase().taskDao().getAllLive().observe(this, new Observer<List<Task>>() {
+    public void loadData() {
+        App.getInstance().getDatabase().taskDao().getAllLive().observe(getViewLifecycleOwner(), new Observer<List<Task>>() {
             @Override
             public void onChanged(List<Task> tasks) {
                 list.clear();
                 list.addAll(tasks);
                 adapter.notifyDataSetChanged();
+
             }
         });
     }
 
-    private void loadDataSorted() {
-        App.getInstance().getDatabase().taskDao().getAllSortedLive().observe(this, new Observer<List<Task>>() {
-            @Override
-            public void onChanged(List<Task> tasks) {
-                list.clear();
-                list.addAll(tasks);
-                adapter.notifyDataSetChanged();
-            }
-        });
+    public void sort() {
+        list.clear();
+        list.addAll(App.getInstance().getDatabase().taskDao().sortASC());
+        adapter.notifyDataSetChanged();
+    }
+    public void initList() {
+        list.clear();
+        list.addAll(App.getInstance().getDatabase().taskDao().getAll());
+        adapter.notifyDataSetChanged();
     }
 }
+
+
+

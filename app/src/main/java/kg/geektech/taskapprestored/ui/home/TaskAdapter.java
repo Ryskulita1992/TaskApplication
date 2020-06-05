@@ -1,26 +1,17 @@
 package kg.geektech.taskapprestored.ui.home;
 
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 
-import kg.geektech.taskapprestored.App;
-import kg.geektech.taskapprestored.FormActivity;
 import kg.geektech.taskapprestored.R;
 import kg.geektech.taskapprestored.models.Task;
 import kg.geektech.taskapprestored.ui.OnItemClickListener;
@@ -31,8 +22,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private OnItemClickListener onItemClickListener;
 
     public TaskAdapter(ArrayList<Task> list) {
+
         this.list = list;
     }
+
 
     @NonNull
     @Override

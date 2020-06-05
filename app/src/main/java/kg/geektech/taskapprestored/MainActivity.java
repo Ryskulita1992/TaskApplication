@@ -15,7 +15,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -43,11 +42,11 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-//        if (FirebaseAuth.getInstance().getCurrentUser()==null){// if not authenticated will open phone activity to do that
-//       startActivity(new Intent(this, PhoneActivity.class));
-//       finish();
-//       return;
-//        }
+        if (FirebaseAuth.getInstance().getCurrentUser()==null){// if not authenticated will open phone activity to do that
+       startActivity(new Intent(this, PhoneActivity.class));
+       finish();
+       return;
+        }
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -60,20 +59,10 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        View header=navigationView.getHeaderView(0);
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent =new Intent(MainActivity.this, ProfileActivity.class);
-                startActivity(intent);
-                Log.e("ololo", "open new Profile Activity from header");
-
-            }
-        });
-
+        // Passing each menu ID as a set of Ids because each
+        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_fireStore)
                 .setDrawerLayout(drawer)
@@ -81,7 +70,19 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        navigationView.getHeaderView(0).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        View navHeaderAva=navigationView.getHeaderView(0);
+        ImageView profileAva=navHeaderAva.findViewById(R.id.image_Ava);
     }
+
 
     private  boolean isShown (){
         SharedPreferences preferences =getSharedPreferences("storageFile", Context.MODE_PRIVATE);
@@ -93,7 +94,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
@@ -101,9 +101,27 @@ public class MainActivity extends AppCompatActivity {
                 SharedPreferences preferences = getSharedPreferences("storageFile", Context.MODE_PRIVATE);
                 preferences.edit().putBoolean("isShown", false).apply();
                 finish();
+            case R.id.action_sort:
+                sort();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
+    private boolean flag;
+    private void sort() {
+        if (flag) {
+            Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+            ((HomeFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).sort();
+            flag = false;
+        } else {
+            Fragment navHostFragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+            ((HomeFragment) navHostFragment.getChildFragmentManager().getFragments().get(0)).initList();
+            flag = true;
+        }
+    }
+
+
+
     @Override
     public boolean onSupportNavigateUp() {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);

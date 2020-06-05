@@ -8,6 +8,9 @@ public class User {
     }
 
     public User (String name, String avatar, int age) {
+        if (name.trim().equals("")){
+            this.name = "no name";
+        }
         this.name = name;
         this.avatar = avatar;
         this.age = age;

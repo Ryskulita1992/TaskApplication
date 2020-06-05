@@ -68,6 +68,7 @@ public class FormActivity extends AppCompatActivity  {
             task.setTitle(title);
             task.setDesc(desc);
             App.getInstance().getDatabase().taskDao().insert(task);
+            FirebaseFirestore.getInstance().collection("tasks").add(task);
             Log.e("ololo", "adding new task and updating");
 
         }

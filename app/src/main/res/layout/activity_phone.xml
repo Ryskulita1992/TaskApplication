@@ -1,29 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="20dp"
-    tools:context="kg.geektech.taskapprestored.login.PhoneActivity">
+    tools:context=".login.PhoneActivity">
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/anim"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        app:lottie_rawRes="@raw/phone_activity"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"/>
     <TextView
         android:layout_marginBottom="90dp"
+        android:inputType="phone"
         app:layout_constraintBottom_toBottomOf="@id/submit"
         app:layout_constraintLeft_toLeftOf="parent"
         android:id="@+id/country_code"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="+971"
+        android:layout_height="50dp"
+        android:text="+996"
+        android:textAlignment="gravity"
         android:textSize="20sp"
-        android:onClick="countryCode"/>
+        android:gravity="" />
     <EditText
         android:id="@+id/phoneNum"
         android:layout_marginBottom="90dp"
         app:layout_constraintBottom_toBottomOf="@id/submit"
         app:layout_constraintRight_toRightOf="parent"
+        android:padding="10dp"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:inputType="phone"
         android:textSize="20sp"
         android:layout_weight="1"
@@ -31,6 +46,7 @@
         />
     <Button
         android:id="@+id/submit"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,26 +55,27 @@
         android:background="@drawable/button_gradient"/>
 
     <EditText
-        android:layout_marginBottom="250dp"
-        app:layout_constraintBottom_toBottomOf="@+id/submit"
         android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginBottom="90dp"
         android:id="@+id/edit_code_num"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:inputType="numberPassword"
+        android:padding="20dp"
         android:textSize="16sp"
         android:background="@drawable/edit_rounded"
         />
     <Button
         android:id="@+id/submit_code"
-        android:visibility="gone"
-        android:layout_marginBottom="180dp"
-        app:layout_constraintBottom_toBottomOf="@+id/submit"
+        android:layout_marginBottom="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginTop="400dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="submit"
+        android:text="verify"
         android:onClick="submitCode"
+        android:visibility="invisible"
         android:background="@drawable/button_gradient"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

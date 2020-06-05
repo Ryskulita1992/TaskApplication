@@ -49,6 +49,7 @@ public class StorageAdapter extends RecyclerView.Adapter <StorageAdapter.ViewHol
                 public void onClick(View v) {
                     onItemClickListener.onItemClick(getAdapterPosition());
 
+
                 }
             });
         }
